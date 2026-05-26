@@ -99,23 +99,23 @@ class TestHandshakeWithDefaultCommands:
 
     def test_handshake_in_default_commands(self, default_commands_fixture):
         """Verify handshake is present in DEFAULT_COMMANDS."""
-        command_actions = [cmd.get("payload", {}).get("action") for cmd in default_commands_fixture]
-        assert "handshake" in command_actions
+        command_names = [cmd.get("name") for cmd in default_commands_fixture]
+        assert "Handshake" in command_names
 
     def test_handshake_position_in_commands(self, default_commands_fixture):
         """Verify handshake is 6th command in DEFAULT_COMMANDS."""
         assert len(default_commands_fixture) >= 6
         handshake_cmd = default_commands_fixture[5]
+        assert handshake_cmd["name"] == "Handshake"
         assert handshake_cmd["payload"]["action"] == "handshake"
 
     def test_handshake_command_has_required_fields(self, default_commands_fixture):
         """Verify handshake command has all required fields."""
-        handshake_cmd = next((cmd for cmd in default_commands_fixture if cmd.get("payload", {}).get("action") == "handshake"), None)
+        handshake_cmd = next((cmd for cmd in default_commands_fixture if cmd.get("name") == "Handshake"), None)
         assert handshake_cmd is not None
-        assert "name" in handshake_cmd
         assert "payload" in handshake_cmd
         payload = handshake_cmd["payload"]
-        assert payload["action"] == "handshake"
+        assert payload.get("action") == "handshake"
         assert "clientId" in payload
         assert "capabilities" in payload
 
